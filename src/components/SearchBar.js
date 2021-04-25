@@ -1,10 +1,12 @@
 import React from 'react'
+import { getCurrentWeather } from './../apis/Open-weather-apis'
 
 class SearchBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            location: ''
+            location: '',
+            temp: ''
         };
     }
 
@@ -16,6 +18,13 @@ class SearchBar extends React.Component {
 
     onFormSubmit(e) {
         e.preventDefault();
+
+        getCurrentWeather(this.state.location)
+        .then((res) => {
+            this.setState({
+                temp: res.data.main.temp
+            });
+        });
     }
 
     // RENDER FUNCTION IS TRIGGERED WHENEVER UPDATING 
@@ -23,15 +32,22 @@ class SearchBar extends React.Component {
 
     render() {
         const location = this.state.location;
+        const temp = this.state.temp;
 
         return(
-            <form onSubmit={(e) => this.onFormSubmit(e) } action="">
+            <div>
+                <form onSubmit={(e) => this.onFormSubmit(e) } action="">
                 <button type="submit">
                     Search
                 </button>
                 <input id="search" name="search" value={location} onChange={(e) => this.onInputChange(e)} />
                 
             </form>
+            <p>
+                {temp}
+            </p>
+            </div>
+            
         )
     }
 }
